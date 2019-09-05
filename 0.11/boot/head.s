@@ -135,7 +135,7 @@ tmp_floppy_area:
 	.fill 1024,1,0
 
 after_page_tables:
-	pushl $0		# These are the parameters to main :-)
+	pushl $0		# These are the parameters to main :-) it's a void function
 	pushl $0
 	pushl $0
 	pushl $L6		# return address for main, if it decides to.

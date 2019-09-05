@@ -40,8 +40,10 @@ Head (before main):
  - Rebuild GDT, IDT
  - Inspect math co-processor
  - Setup stack for main
+ - Setup paging
+ - Ret to main
 
- 
+
                                                     0x05cb8-0x064b8:GDT (2KB)
                                                              |    |
       0x00000  0x01000  0x02000  0x03000  0x04000  0x05000  0x06000
