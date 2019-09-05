@@ -1,0 +1,54 @@
+0x00400-0x004FF: BIOS data    
+    |
+     \   0x0E05B-0x0FFFE: INTs                         0x9000-0x90200:INITSEG
+      \       |                                               |
+SEG: 0x0000  0x1000                                        0x9000 
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |     |
+        +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
+        |  |  |                                               ||                                       |
+        |  |   0x10000: System                        ||                                       |
+        | 0x07C00-0x07E00:bootsect      0x90000-0x901FC:sysdata|                                       |
+0x00000-0x003FF: IVT                                        0x90200: Setup                      0xFE000-0xFFFFF: BIOS
+
+
+16-bit:                                                                                              
+BIOS:
+ - In ROM
+ - Setup IVT and Interupt Service Programs
+ - Setup BIOS data section
+ - Load bootsect
+
+Bootsect:
+ - Manage memory
+ - Copy itself to INITSEG
+ - Load the Setup Program
+ - Check root device
+
+Setup Program:
+ - Load system data: cursor, memory size, display info, disk parameters...(covering bootsect)
+ - Copy kernel from 0x10000 to 0x00000, disabling interrupts
+ - Setup GDTR, IDTR
+ - Open A20: entering 32-bit
+ - Program 8259A to enable Interrupt priority level
+ - Open CR0 to enable protected mode
+ 
+32-bit:
+Head (before main):
+ Create page table dir, page table, buffer, GDT, IDT at 0x00000:
+ - Setup segment regs: containing GDT/LDT index (selector), priority level
+ - Rebuild GDT, IDT
+ - Inspect math co-processor
+ - Setup stack for main
+
+ 
+                                                    0x05cb8-0x064b8:GDT (2KB)
+                                                             |    |
+      0x00000  0x01000  0x02000  0x03000  0x04000  0x05000  0x06000
+        +--------+--------+--------+--------+--------+--------+------------
+        |        |   pt0  |   pg1  |   pt2  |   pt3  | ||    |    | main...        
+        +--------+--------+--------+--------+--------+--------+------------
+            |                                        | ||    |
+    page directory table (4KB)                       | |0x043b8-0x05cb8:IDT (2KB)
+                                                     | |
+                                     0x05000-0x05400: floppy buffer (1KB)

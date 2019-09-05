@@ -20,7 +20,7 @@ startup_32:
 	mov %ax,%ds
 	mov %ax,%es
 	mov %ax,%fs
-	mov %ax,%gs
+	mov %ax,%gs			# setup selectors for regs
 	lss stack_start,%esp
 	call setup_idt
 	call setup_gdt
@@ -79,7 +79,7 @@ check_x87:
  */
 setup_idt:
 	lea ignore_int,%edx
-	movl $0x00080000,%eax
+	movl $0x00080000,%eax	/*8: 1000*/
 	movw %dx,%ax		/* selector = 0x0008 = cs */
 	movw $0x8E00,%dx	/* interrupt gate - dpl=0, present */
 
@@ -218,7 +218,7 @@ setup_paging:
 	movl %cr0,%eax
 	orl $0x80000000,%eax
 	movl %eax,%cr0		/* set paging (PG) bit */
-	ret			/* this also flushes prefetch-queue */
+	ret					/* this also flushes prefetch-queue, goes to main */
 
 .align 2
 .word 0

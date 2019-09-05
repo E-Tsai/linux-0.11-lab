@@ -140,7 +140,7 @@ end_move:
 	#mov	$0xD1, %al	# command write
 	#out	%al, $0x64
 	#call	empty_8042
-	#mov	$0xDF, %al	# A20 on
+	#mov	$0xDF, %al	# A20 on: entering 32-bit
 	#out	%al, $0x60
 	#call	empty_8042
 	inb     $0x92, %al	# open A20 line(Fast Gate A20).
@@ -155,8 +155,11 @@ end_move:
 # which is used for the internal hardware interrupts as well. We just
 # have to reprogram the 8259's, and it isn't fun.
 
+
+	# setting up priority level for interrupts
+
 	mov	$0x11, %al		# initialization sequence(ICW1)
-					# ICW4 needed(1),CASCADE mode,Level-triggered
+						# ICW4 needed(1),CASCADE mode,Level-triggered
 	out	%al, $0x20		# send it to 8259A-1
 	.word	0x00eb,0x00eb		# jmp $+2, jmp $+2
 	out	%al, $0xA0		# and to 8259A-2

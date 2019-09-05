@@ -33,29 +33,31 @@
 	begbss:
 	.text
 
-	.equ SETUPLEN, 4		# nr of setup-sectors
+	.equ SETUPLEN, 4			# nr of setup-sectors
 	.equ BOOTSEG, 0x07c0		# original address of boot-sector
 	.equ INITSEG, 0x9000		# we move boot here - out of the way
 	.equ SETUPSEG, 0x9020		# setup starts here
-	.equ SYSSEG, 0x1000		# system loaded at 0x10000 (65536).
+	.equ SYSSEG, 0x1000			# system loaded at 0x10000 (65536).
 	.equ ENDSEG, SYSSEG + SYSSIZE	# where to stop loading
 
 # ROOT_DEV:	0x000 - same type of floppy as boot.
 #		0x301 - first partition on first drive etc
 	.equ ROOT_DEV, 0x301
 	ljmp    $BOOTSEG, $_start
+
+# move the bootsect out of the way
 _start:
 	mov	$BOOTSEG, %ax
 	mov	%ax, %ds
 	mov	$INITSEG, %ax
 	mov	%ax, %es
-	mov	$256, %cx
+	mov	$256, %cx		# 256 words = 512 bytes: the size of the bootsect (.code16: word len is 16)
 	sub	%si, %si
 	sub	%di, %di
 	rep	
 	movsw
 	ljmp	$INITSEG, $go
-go:	mov	%cs, %ax
+go:	mov	%cs, %ax		# get back to 0x07C00
 	mov	%ax, %ds
 	mov	%ax, %es
 # put stack at 0x9ff00.

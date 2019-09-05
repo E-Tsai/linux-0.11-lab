@@ -1,8 +1,8 @@
 # Check running envrionment
 LAB_ENV_ID=/home/ubuntu/Desktop/lab.desktop
-ifneq ($(LAB_ENV_ID),$(wildcard $(LAB_ENV_ID)))
-  $(error ERR: Please not try Linux 0.11 Lab in local host, but use it with Cloud Lab, please refer to 'Run and login the lab' part of README.md)
-endif
+# ifneq ($(LAB_ENV_ID),$(wildcard $(LAB_ENV_ID)))
+#   $(error ERR: Please not try Linux 0.11 Lab in local host, but use it with Cloud Lab, please refer to 'Run and login the lab' part of README.md)
+# endif
 
 include Makefile.head
 
