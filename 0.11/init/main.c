@@ -124,7 +124,7 @@ void main(void)		/* This really IS void, no error here. */
 		buffer_memory_end = 1*1024*1024;
 	main_memory_start = buffer_memory_end;
 #ifdef RAMDISK_SIZE
-	main_memory_start += rd_init(main_memory_start, RAMDISK_SIZE*1024);
+	main_memory_start += rd_init(main_memory_start, RAMDISK_SIZE*1024);		// split memory: ramdisk, buffer, main memory
 #endif
 	mem_init(main_memory_start,memory_end);
 	trap_init();
