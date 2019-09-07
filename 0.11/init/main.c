@@ -126,8 +126,8 @@ void main(void)		/* This really IS void, no error here. */
 #ifdef RAMDISK_SIZE
 	main_memory_start += rd_init(main_memory_start, RAMDISK_SIZE*1024);		// split memory: ramdisk, buffer, main memory
 #endif
-	mem_init(main_memory_start,memory_end);
-	trap_init();
+	mem_init(main_memory_start,memory_end);			// init main memory
+	trap_init();									// init trap: idt
 	blk_dev_init();
 	chr_dev_init();
 	tty_init();
