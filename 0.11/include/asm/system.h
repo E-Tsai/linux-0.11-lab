@@ -30,6 +30,8 @@ __asm__ ("movw %%dx,%%ax\n\t" \
 	"o" (*(4+(char *) (gate_addr))), \
 	"d" ((char *) (addr)),"a" (0x00080000))
 
+	// i: immediate; d: edx; a: eax; 
+
 #define set_intr_gate(n,addr) \
 	_set_gate(&idt[n],14,0,addr)
 
