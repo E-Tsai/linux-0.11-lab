@@ -110,6 +110,7 @@ void schedule(void)
 
 	for(p = &LAST_TASK ; p > &FIRST_TASK ; --p)
 		if (*p) {
+			// Jiffies is the number of ticks (10ms/tic) from the start of the system. Defined on line 139 of sched.h
 			if ((*p)->alarm && (*p)->alarm < jiffies) {
 					(*p)->signal |= (1<<(SIGALRM-1));
 					(*p)->alarm = 0;

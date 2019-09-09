@@ -24,8 +24,8 @@ struct request {
 	int dev;		/* -1 if no request */
 	int cmd;		/* READ or WRITE */
 	int errors;
-	unsigned long sector;
-	unsigned long nr_sectors;
+	unsigned long sector;			/* start sector, 1 block = 2 sectors */
+	unsigned long nr_sectors;		/* number of sectors*/
 	char * buffer;
 	struct task_struct * waiting;
 	struct buffer_head * bh;

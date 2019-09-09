@@ -42,8 +42,8 @@ int copy_mem(int nr,struct task_struct * p)
 	unsigned long old_data_base,new_data_base,data_limit;
 	unsigned long old_code_base,new_code_base,code_limit;
 
-	code_limit=get_limit(0x0f);
-	data_limit=get_limit(0x17);
+	code_limit=get_limit(0x0f);		// 0x0f: 1111: code seg, LDT, prior 3 of child process
+	data_limit=get_limit(0x17);		// 0x17: 10111: data seg, LDT, 3 
 	old_code_base = get_base(current->ldt[1]);
 	old_data_base = get_base(current->ldt[2]);
 	if (old_data_base != old_code_base)

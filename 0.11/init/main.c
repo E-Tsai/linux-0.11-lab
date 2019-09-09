@@ -133,12 +133,12 @@ void main(void)		/* This really IS void, no error here. */
 	tty_init();
 	time_init();
 	sched_init();
-	buffer_init(buffer_memory_end);
+	buffer_init(buffer_memory_end);					// fs/buffer.c
 	hd_init();
 	floppy_init();
 	sti();
 	move_to_user_mode();
-	if (!fork()) {		/* we count on this going ok */
+	if (!fork()) {		/* we count on this going ok: include/unistd.h:_syscall0 */
 		init();
 	}
 /*
@@ -148,7 +148,7 @@ void main(void)		/* This really IS void, no error here. */
  * can run). For task0 'pause()' just means we go check if some other
  * task can run, and if not we return here.
  */
-	for(;;) pause();
+	for(;;) pause();			// kernel/sched.c
 }
 
 static int printf(const char *fmt, ...)
@@ -174,21 +174,23 @@ void init(void)
 
 	setup((void *) &drive_info);
 	(void) open("/dev/tty0",O_RDWR,0);
-	(void) dup(0);
-	(void) dup(0);
+	// return handler 0: stdin
+	(void) dup(0);			// copy handler: stdout
+	(void) dup(0);			// copy handler: stderr
 	printf("%d buffers = %d bytes buffer space\n\r",NR_BUFFERS,
 		NR_BUFFERS*BLOCK_SIZE);
 	printf("Free mem: %d bytes\n\r",memory_end-main_memory_start);
 	if (!(pid=fork())) {
+		// child process: close handler 0
 		close(0);
 		if (open("/etc/rc",O_RDONLY,0))
-			_exit(1);
+			_exit(1);			// open /etc/rc with read-only
 		execve("/bin/sh",argv_rc,envp_rc);
-		_exit(2);
+		_exit(2);				// open /bin/sh
 	}
 	if (pid>0)
 		while (pid != wait(&i))
-			/* nothing */;
+			/* nothing: wait for this child process to finish */;
 	while (1) {
 		if ((pid=fork())<0) {
 			printf("Fork failed in init\r\n");
